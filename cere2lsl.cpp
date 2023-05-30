@@ -59,6 +59,7 @@ public:
           {
             /* These options don’t set a flag.
                We distinguish them by their indices. */
+            {"device", required_argument, 0, 'd'},
             {"chunksize",  required_argument, 0, 'c'},
             {"sourceid",  required_argument, 0, 's'},
             {"streamname",    required_argument, 0, 'n'},
@@ -76,6 +77,10 @@ public:
 
         switch (c)
           {
+          case 'd':
+            deviceName=std::string(optarg);
+            break;
+
           case 'c':
             chunkSize=std::stoi(optarg);
             break;
@@ -102,6 +107,7 @@ public:
     }
   }
 
+  std::string deviceName="/dev/serial1";
   std::string streamName="CereBridge";
   std::string sourceId;
   int chunkSize=0;
@@ -110,7 +116,7 @@ public:
 class serialConnection{
  public:
   serialConnection(){
-    if ((serial_port = serialOpen ("/dev/ttyS0", 460800)) < 0)	/* open serial port */
+    if ((serial_port = serialOpen (deviceName, 460800)) < 0)	/* open serial port */
       {
         fprintf (stderr, "Unable to open serial device: %s\n", strerror (errno)) ;
         throw std::runtime_error("111");
