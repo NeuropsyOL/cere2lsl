@@ -115,8 +115,8 @@ public:
 
 class serialConnection{
  public:
-  serialConnection(){
-    if ((serial_port = serialOpen (deviceName, 460800)) < 0)	/* open serial port */
+  serialConnection(const std::string& deviceName) {
+    if ((serial_port = serialOpen (deviceName.c_str(), 460800)) < 0)	/* open serial port */
       {
         fprintf (stderr, "Unable to open serial device: %s\n", strerror (errno)) ;
         throw std::runtime_error("111");
@@ -216,7 +216,7 @@ int main (int argc, char** argv)
   commandLineOptions options(argc,argv);
   lsl::stream_info info(options.streamName,"eeg",16,250,lsl::cf_float32,options.sourceId);
   lsl::stream_outlet stream_out(info,options.chunkSize);
-  serialConnection con;
+  serialConnection con(options.deviceName);
 
   try{
   while(!exit_request){
